@@ -51,9 +51,9 @@ public class JQuickMaskEmailInvoker extends JQuickBaseMethodInvoker {
             return "***" + domain;
         }
 
-        String masked = local.charAt(0) +
-                "*".repeat(Math.min(3, local.length() - 2)) +
-                local.charAt(local.length() - 1);
+        String masked = local.charAt(0)
+                + new String(new char[Math.min(3, local.length() - 2)]).replace('\0', '*')
+                + local.charAt(local.length() - 1);
         return masked + domain;
     }
 }
