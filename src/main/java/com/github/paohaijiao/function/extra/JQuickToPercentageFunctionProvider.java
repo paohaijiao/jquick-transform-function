@@ -1,0 +1,44 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
+ */
+package com.github.paohaijiao.function.extra;
+
+import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
+import com.github.paohaijiao.spi.anno.Priority;
+import com.github.paohaijiao.spi.constants.PriorityConstants;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
+
+@Priority(PriorityConstants.SYSTEM_HIGH)
+public class JQuickToPercentageFunctionProvider extends JQuickBaseFunctionFunctionProvider {
+
+    public JQuickToPercentageFunctionProvider() {
+        super("toPercentage", "转换为百分比格式 - 用法: toPercentage(number, decimals?)");
+    }
+
+    @Override
+    public Object invoke(List<Object> args) {
+        validateArgCountRange(args, 1, 2);
+        double number = asDouble(args.get(0));
+        int decimals = args.size() > 1 ? asInt(args.get(1)) : 2;
+
+        NumberFormat percentFormat = NumberFormat.getPercentInstance(Locale.CHINA);
+        percentFormat.setMinimumFractionDigits(decimals);
+        percentFormat.setMaximumFractionDigits(decimals);
+
+        return percentFormat.format(number);
+    }
+}

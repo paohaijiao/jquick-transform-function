@@ -1,7 +1,7 @@
 package com.github.paohaijiao.function.manager;
 
 import com.github.paohaijiao.console.JConsole;
-import com.github.paohaijiao.function.core.JQuickMethodInvoker;
+import com.github.paohaijiao.function.core.JQuickMethodFunctionProvider;
 import com.github.paohaijiao.spi.ServiceLoader;
 
 import java.util.*;
@@ -22,20 +22,20 @@ public class JQuickMethodInvocationManager {
 
     private static volatile JQuickMethodInvocationManager instance;
 
-    private final Map<String, JQuickMethodInvoker> invokerRegistry = new ConcurrentHashMap<>();
+    private final Map<String, JQuickMethodFunctionProvider> invokerRegistry = new ConcurrentHashMap<>();
 
-    private final List<JQuickMethodInvoker> allInvokers;
+    private final List<JQuickMethodFunctionProvider> allInvokers;
 
     private final AtomicBoolean prettyPrintEnabled = new AtomicBoolean(true);
 
-    private final Map<String, List<JQuickMethodInvoker>> groupedInvokers = new ConcurrentHashMap<>();
+    private final Map<String, List<JQuickMethodFunctionProvider>> groupedInvokers = new ConcurrentHashMap<>();
 
     private JQuickMethodInvocationManager() {
-        this.allInvokers = ServiceLoader.loadServicesByPriority(JQuickMethodInvoker.class);
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        this.allInvokers = ServiceLoader.loadServicesByPriority(JQuickMethodFunctionProvider.class);
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             invokerRegistry.put(invoker.getMethodName(), invoker);
             String group = extractGroup(invoker.getDescription());
-            List<JQuickMethodInvoker> list = groupedInvokers.get(group);
+            List<JQuickMethodFunctionProvider> list = groupedInvokers.get(group);
             if (list == null) {
                 list = new ArrayList<>();
                 groupedInvokers.put(group, list);
@@ -68,7 +68,7 @@ public class JQuickMethodInvocationManager {
      * 调用方法
      */
     public Object invoke(String methodName, List<Object> args) {
-        JQuickMethodInvoker invoker = invokerRegistry.get(methodName);
+        JQuickMethodFunctionProvider invoker = invokerRegistry.get(methodName);
         if (invoker == null) {
             log.error("Method not found: " + methodName);
             throw new IllegalArgumentException("Method not found: " + methodName);
@@ -94,24 +94,24 @@ public class JQuickMethodInvocationManager {
     /**
      * 获取所有方法调用器
      */
-    public Collection<JQuickMethodInvoker> getAllInvokers() {
+    public Collection<JQuickMethodFunctionProvider> getAllInvokers() {
         return Collections.unmodifiableCollection(allInvokers);
     }
 
     /**
      * 根据方法名获取调用器
      */
-    public Optional<JQuickMethodInvoker> getInvoker(String methodName) {
+    public Optional<JQuickMethodFunctionProvider> getInvoker(String methodName) {
         return Optional.ofNullable(invokerRegistry.get(methodName));
     }
 
     /**
      * 动态注册方法
      */
-    public void registerInvoker(JQuickMethodInvoker invoker) {
+    public void registerInvoker(JQuickMethodFunctionProvider invoker) {
         invokerRegistry.put(invoker.getMethodName(), invoker);
         String group = extractGroup(invoker.getDescription());
-        List<JQuickMethodInvoker> list = groupedInvokers.get(group);
+        List<JQuickMethodFunctionProvider> list = groupedInvokers.get(group);
         if (list == null) {
             list = new ArrayList<>();
             groupedInvokers.put(group, list);
@@ -124,10 +124,10 @@ public class JQuickMethodInvocationManager {
      * 注销方法
      */
     public void unregisterInvoker(String methodName) {
-        JQuickMethodInvoker removed = invokerRegistry.remove(methodName);
+        JQuickMethodFunctionProvider removed = invokerRegistry.remove(methodName);
         if (removed != null) {
             String group = extractGroup(removed.getDescription());
-            List<JQuickMethodInvoker> groupList = groupedInvokers.get(group);
+            List<JQuickMethodFunctionProvider> groupList = groupedInvokers.get(group);
             if (groupList != null) {
                 groupList.remove(removed);
                 if (groupList.isEmpty()) {
@@ -165,11 +165,11 @@ public class JQuickMethodInvocationManager {
     /**
      * 按优先级排序的方法列表
      */
-    public List<JQuickMethodInvoker> getInvokersSortedByPriority() {
-        List<JQuickMethodInvoker> sorted = new ArrayList<>(allInvokers);
-        Collections.sort(sorted, new Comparator<JQuickMethodInvoker>() {
+    public List<JQuickMethodFunctionProvider> getInvokersSortedByPriority() {
+        List<JQuickMethodFunctionProvider> sorted = new ArrayList<>(allInvokers);
+        Collections.sort(sorted, new Comparator<JQuickMethodFunctionProvider>() {
             @Override
-            public int compare(JQuickMethodInvoker a, JQuickMethodInvoker b) {
+            public int compare(JQuickMethodFunctionProvider a, JQuickMethodFunctionProvider b) {
                 return Integer.compare(b.getPriority(), a.getPriority());
             }
         });
@@ -179,11 +179,11 @@ public class JQuickMethodInvocationManager {
     /**
      * 按方法名排序的方法列表
      */
-    public List<JQuickMethodInvoker> getInvokersSortedByName() {
-        List<JQuickMethodInvoker> sorted = new ArrayList<>(allInvokers);
-        Collections.sort(sorted, new Comparator<JQuickMethodInvoker>() {
+    public List<JQuickMethodFunctionProvider> getInvokersSortedByName() {
+        List<JQuickMethodFunctionProvider> sorted = new ArrayList<>(allInvokers);
+        Collections.sort(sorted, new Comparator<JQuickMethodFunctionProvider>() {
             @Override
-            public int compare(JQuickMethodInvoker a, JQuickMethodInvoker b) {
+            public int compare(JQuickMethodFunctionProvider a, JQuickMethodFunctionProvider b) {
                 return a.getMethodName().compareTo(b.getMethodName());
             }
         });
@@ -193,13 +193,13 @@ public class JQuickMethodInvocationManager {
     /**
      * 搜索方法（支持模糊匹配）
      */
-    public List<JQuickMethodInvoker> searchMethods(String keyword) {
+    public List<JQuickMethodFunctionProvider> searchMethods(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return new ArrayList<>(allInvokers);
         }
         final String lowerKeyword = keyword.toLowerCase();
-        List<JQuickMethodInvoker> results = new ArrayList<>();
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        List<JQuickMethodFunctionProvider> results = new ArrayList<>();
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             if (invoker.getMethodName().toLowerCase().contains(lowerKeyword) ||
                     (invoker.getDescription() != null && invoker.getDescription().toLowerCase().contains(lowerKeyword))) {
                 results.add(invoker);
@@ -211,7 +211,7 @@ public class JQuickMethodInvocationManager {
     /**
      * 获取按分组的方法
      */
-    public Map<String, List<JQuickMethodInvoker>> getGroupedInvokers() {
+    public Map<String, List<JQuickMethodFunctionProvider>> getGroupedInvokers() {
         return Collections.unmodifiableMap(groupedInvokers);
     }
 
@@ -257,7 +257,7 @@ public class JQuickMethodInvocationManager {
      */
     public void printRegisteredMethodsBasic() {
         log.info("=== Registered Methods (" + allInvokers.size() + ") ===");
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             log.info("  - " + invoker.getMethodName() + ": " + invoker.getDescription());
         }
     }
@@ -274,7 +274,7 @@ public class JQuickMethodInvocationManager {
         int maxNameLen = 12; // "Method Name" 的长度
         int maxDescLen = 11; // "Description" 的长度
         int maxPriorityLen = 8; // "Priority" 的长度
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             maxNameLen = Math.max(maxNameLen, invoker.getMethodName().length());
             int descLen = invoker.getDescription() != null ? invoker.getDescription().length() : 0;
             maxDescLen = Math.max(maxDescLen, descLen);
@@ -298,7 +298,7 @@ public class JQuickMethodInvocationManager {
         log.info(separator);
 
         // 打印数据行
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             String name = invoker.getMethodName();
             String desc = invoker.getDescription() != null ? invoker.getDescription() : "";
             String priority = String.valueOf(invoker.getPriority());
@@ -322,13 +322,13 @@ public class JQuickMethodInvocationManager {
         log.info("");
         log.info("## Methods by Group");
         log.info("");
-        for (Map.Entry<String, List<JQuickMethodInvoker>> entry : groupedInvokers.entrySet()) {
+        for (Map.Entry<String, List<JQuickMethodFunctionProvider>> entry : groupedInvokers.entrySet()) {
             String group = entry.getKey();
-            List<JQuickMethodInvoker> invokers = entry.getValue();
+            List<JQuickMethodFunctionProvider> invokers = entry.getValue();
             // 计算组内最大方法名和描述长度
             int maxNameLen = group.length() + 2;
             int maxDescLen = 0;
-            for (JQuickMethodInvoker invoker : invokers) {
+            for (JQuickMethodFunctionProvider invoker : invokers) {
                 maxNameLen = Math.max(maxNameLen, invoker.getMethodName().length());
                 int descLen = invoker.getDescription() != null ?
                         invoker.getDescription().replaceFirst("^\\[[^\\]]+\\]", "").trim().length() : 0;
@@ -345,7 +345,7 @@ public class JQuickMethodInvocationManager {
             String separator = "|" + repeat("-", maxNameLen + 2) + "|" + repeat("-", maxDescLen + 2) + "|";
             log.info(separator);
             // 打印数据行
-            for (JQuickMethodInvoker invoker : invokers) {
+            for (JQuickMethodFunctionProvider invoker : invokers) {
                 String name = invoker.getMethodName();
                 String desc = invoker.getDescription() != null ? invoker.getDescription() : "";
                 // 移除分组标记
@@ -396,7 +396,7 @@ public class JQuickMethodInvocationManager {
         log.info(separator);
         // 打印数据行
         for (int i = 0; i < allInvokers.size(); i++) {
-            JQuickMethodInvoker invoker = allInvokers.get(i);
+            JQuickMethodFunctionProvider invoker = allInvokers.get(i);
             String index = String.valueOf(i + 1);
             String name = invoker.getMethodName();
             String priority = String.valueOf(invoker.getPriority());
@@ -429,7 +429,7 @@ public class JQuickMethodInvocationManager {
         // 计算每列的最大宽度
         int maxNameLen = 0;
         int maxDescLen = 0;
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             maxNameLen = Math.max(maxNameLen, invoker.getMethodName().length());
             int descLen = invoker.getDescription() != null ? invoker.getDescription().length() : 0;
             maxDescLen = Math.max(maxDescLen, descLen);
@@ -443,7 +443,7 @@ public class JQuickMethodInvocationManager {
                 padCenter("Description", maxDescLen) + " │");
         log.info("├" + repeat("─", maxNameLen + 2) + "┼" + repeat("─", maxDescLen + 2) + "┤");
         // 打印数据行
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             String name = invoker.getMethodName();
             String desc = invoker.getDescription() != null ? invoker.getDescription() : "";
             log.info("│ " + padRight(name, maxNameLen) + " │ " +
@@ -470,9 +470,9 @@ public class JQuickMethodInvocationManager {
      */
     public void printGroupedMethodsBasic() {
         log.info("=== Methods by Group ===");
-        for (Map.Entry<String, List<JQuickMethodInvoker>> entry : groupedInvokers.entrySet()) {
+        for (Map.Entry<String, List<JQuickMethodFunctionProvider>> entry : groupedInvokers.entrySet()) {
             log.info("[" + entry.getKey() + "] - " + entry.getValue().size() + " methods");
-            for (JQuickMethodInvoker invoker : entry.getValue()) {
+            for (JQuickMethodFunctionProvider invoker : entry.getValue()) {
                 log.info("    - " + invoker.getMethodName() + ": " + invoker.getDescription());
             }
         }
@@ -494,7 +494,7 @@ public class JQuickMethodInvocationManager {
      */
     public void printDetailedMethodsBasic() {
         log.info("=== Detailed Methods Information ===");
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             log.info("Method: " + invoker.getMethodName());
             log.info("  Description: " + invoker.getDescription());
             log.info("  Priority: " + invoker.getPriority());
@@ -531,7 +531,7 @@ public class JQuickMethodInvocationManager {
         StringBuilder sb = new StringBuilder();
         sb.append("| Method Name | Description | Priority |\n");
         sb.append("|-------------|-------------|----------|\n");
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             sb.append("| ").append(invoker.getMethodName())
                     .append(" | ").append(invoker.getDescription())
                     .append(" | ").append(invoker.getPriority()).append(" |\n");
@@ -549,7 +549,7 @@ public class JQuickMethodInvocationManager {
         // 计算列宽
         int maxNameLen = 12;
         int maxDescLen = 11;
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             maxNameLen = Math.max(maxNameLen, invoker.getMethodName().length());
             int descLen = invoker.getDescription() != null ? invoker.getDescription().length() : 0;
             maxDescLen = Math.max(maxDescLen, descLen);
@@ -561,7 +561,7 @@ public class JQuickMethodInvocationManager {
                 repeat("-", maxDescLen + 2) + "|----------|\n";
         sb.append(header);
         sb.append(separator);
-        for (JQuickMethodInvoker invoker : allInvokers) {
+        for (JQuickMethodFunctionProvider invoker : allInvokers) {
             sb.append("| ").append(padRight(invoker.getMethodName(), maxNameLen))
                     .append(" | ").append(padRight(invoker.getDescription(), maxDescLen))
                     .append(" | ").append(invoker.getPriority()).append(" |\n");
