@@ -26,4 +26,4 @@ com.github.paohaijiao.function.math.JQuickAbsInvoker
 com.github.paohaijiao.function.date.JQuickFormatDateInvoker
 com.github.paohaijiao.function.date.JQuickTodayInvoker
 com.github.paohaijiao.function.date.JQuickTimestampInvoker
-com.github.paohaijiao.function.date.JQuickFormatDateInvoker
+com.github.paohaijiao.function.date.JQuickNowInvoker
