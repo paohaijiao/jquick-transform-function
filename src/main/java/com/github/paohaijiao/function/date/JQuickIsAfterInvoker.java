@@ -13,43 +13,47 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.string;
+package com.github.paohaijiao.function.date;
 
 /**
- * packageName com.github.paohaijiao.function.string
+ * packageName com.github.paohaijiao.function.date
  *
  * @author Martin
  * @version 1.0.0
  * @since 2026/5/9
  */
-
 import com.github.paohaijiao.function.domain.JQuickBaseMethodInvoker;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickCenterPadInvoker extends JQuickBaseMethodInvoker {
+public class JQuickIsAfterInvoker extends JQuickBaseMethodInvoker {
 
-    public JQuickCenterPadInvoker() {
-        super("centerPad", "居中对齐填充 - 用法: centerPad(str, size, padChar?)");
+    public JQuickIsAfterInvoker() {
+        super("isAfter", "判断日期是否在之后 - 用法: isAfter(date1, date2)");
     }
 
     @Override
     public Object invoke(List<Object> args) {
-        validateArgCountRange(args, 2, 3);
-        String str = asString(args.get(0));
-        int size = asInt(args.get(1));
-        char padChar = args.size() > 2 ? asString(args.get(2)).charAt(0) : ' ';
-        if (str == null) str = "";
-        if (str.length() >= size) return str;
-        int totalPad = size - str.length();
-        int leftPad = totalPad / 2;
-        int rightPad = totalPad - leftPad;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < leftPad; i++) sb.append(padChar);
-        sb.append(str);
-        for (int i = 0; i < rightPad; i++) sb.append(padChar);
-        return sb.toString();
+        validateArgCount(args, 2);
+
+        LocalDate d1 = toLocalDate(args.get(0));
+        LocalDate d2 = toLocalDate(args.get(1));
+
+        return d1.isAfter(d2);
+    }
+
+    private LocalDate toLocalDate(Object obj) {
+        if (obj instanceof LocalDate) return (LocalDate) obj;
+        if (obj instanceof LocalDateTime) return ((LocalDateTime) obj).toLocalDate();
+        if (obj instanceof java.util.Date) {
+            return ((java.util.Date) obj).toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+        }
+        return LocalDate.parse(obj.toString());
     }
 }

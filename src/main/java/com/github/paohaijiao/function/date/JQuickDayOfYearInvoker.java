@@ -13,43 +13,47 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.string;
+package com.github.paohaijiao.function.date;
 
 /**
- * packageName com.github.paohaijiao.function.string
+ * packageName com.github.paohaijiao.function.date
  *
  * @author Martin
  * @version 1.0.0
  * @since 2026/5/9
  */
-
 import com.github.paohaijiao.function.domain.JQuickBaseMethodInvoker;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickCenterPadInvoker extends JQuickBaseMethodInvoker {
+public class JQuickDayOfYearInvoker extends JQuickBaseMethodInvoker {
 
-    public JQuickCenterPadInvoker() {
-        super("centerPad", "居中对齐填充 - 用法: centerPad(str, size, padChar?)");
+    public JQuickDayOfYearInvoker() {
+        super("dayOfYear", "获取年中第几天(1-366) - 用法: dayOfYear(date?)");
     }
 
     @Override
     public Object invoke(List<Object> args) {
-        validateArgCountRange(args, 2, 3);
-        String str = asString(args.get(0));
-        int size = asInt(args.get(1));
-        char padChar = args.size() > 2 ? asString(args.get(2)).charAt(0) : ' ';
-        if (str == null) str = "";
-        if (str.length() >= size) return str;
-        int totalPad = size - str.length();
-        int leftPad = totalPad / 2;
-        int rightPad = totalPad - leftPad;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < leftPad; i++) sb.append(padChar);
-        sb.append(str);
-        for (int i = 0; i < rightPad; i++) sb.append(padChar);
-        return sb.toString();
+        validateArgCountRange(args, 0, 1);
+
+        LocalDate date;
+        if (args.isEmpty()) {
+            date = LocalDate.now();
+        } else {
+            Object dateObj = args.get(0);
+            if (dateObj instanceof LocalDate) {
+                date = (LocalDate) dateObj;
+            } else if (dateObj instanceof LocalDateTime) {
+                date = ((LocalDateTime) dateObj).toLocalDate();
+            } else {
+                date = LocalDate.parse(dateObj.toString());
+            }
+        }
+
+        return date.getDayOfYear();
     }
 }

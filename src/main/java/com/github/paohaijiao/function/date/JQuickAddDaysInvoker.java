@@ -13,10 +13,10 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.string;
+package com.github.paohaijiao.function.date;
 
 /**
- * packageName com.github.paohaijiao.function.string
+ * packageName com.github.paohaijiao.function.date
  *
  * @author Martin
  * @version 1.0.0
@@ -26,30 +26,34 @@ package com.github.paohaijiao.function.string;
 import com.github.paohaijiao.function.domain.JQuickBaseMethodInvoker;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickCenterPadInvoker extends JQuickBaseMethodInvoker {
+public class JQuickAddDaysInvoker extends JQuickBaseMethodInvoker {
 
-    public JQuickCenterPadInvoker() {
-        super("centerPad", "居中对齐填充 - 用法: centerPad(str, size, padChar?)");
+    public JQuickAddDaysInvoker() {
+        super("addDays", "增加天数 - 用法: addDays(date, days)");
     }
 
     @Override
     public Object invoke(List<Object> args) {
-        validateArgCountRange(args, 2, 3);
-        String str = asString(args.get(0));
-        int size = asInt(args.get(1));
-        char padChar = args.size() > 2 ? asString(args.get(2)).charAt(0) : ' ';
-        if (str == null) str = "";
-        if (str.length() >= size) return str;
-        int totalPad = size - str.length();
-        int leftPad = totalPad / 2;
-        int rightPad = totalPad - leftPad;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < leftPad; i++) sb.append(padChar);
-        sb.append(str);
-        for (int i = 0; i < rightPad; i++) sb.append(padChar);
-        return sb.toString();
+        validateArgCount(args, 2);
+
+        Object dateObj = args.get(0);
+        long days = asLong(args.get(1));
+
+        if (dateObj instanceof LocalDate) {
+            return ((LocalDate) dateObj).plusDays(days);
+        } else if (dateObj instanceof LocalDateTime) {
+            return ((LocalDateTime) dateObj).plusDays(days);
+        } else if (dateObj instanceof java.util.Date) {
+            java.util.Date date = (java.util.Date) dateObj;
+            return new java.util.Date(date.getTime() + days * 24 * 3600 * 1000);
+        }
+
+        LocalDate parsed = LocalDate.parse(dateObj.toString());
+        return parsed.plusDays(days);
     }
 }
