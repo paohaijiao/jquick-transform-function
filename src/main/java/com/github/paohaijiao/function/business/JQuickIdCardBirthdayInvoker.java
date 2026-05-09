@@ -13,47 +13,54 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.string;
+package com.github.paohaijiao.function.business;
+
+/**
+ * packageName com.github.paohaijiao.function.business
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/9
+ */
 
 import com.github.paohaijiao.function.domain.JQuickBaseMethodInvoker;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickToStringInvoker extends JQuickBaseMethodInvoker {
+public class JQuickIdCardBirthdayInvoker extends JQuickBaseMethodInvoker {
 
-    public JQuickToStringInvoker() {
-        super("toString", "转换为字符串 - 用法: toString(value, pattern?)");
+    public JQuickIdCardBirthdayInvoker() {
+        super("idCardBirthday", "从身份证号提取生日 - 用法: idCardBirthday(idCard, pattern?)");
     }
 
     @Override
     public Object invoke(List<Object> args) {
         validateArgCountRange(args, 1, 2);
-        Object value = args.get(0);
+        String idCard = asString(args.get(0));
 
-        if (value == null) return null;
+        if (idCard == null) return null;
 
-        // 日期类型特殊处理
-        if (value instanceof LocalDate && args.size() > 1) {
-            String pattern = asString(args.get(1));
-            return ((LocalDate) value).format(DateTimeFormatter.ofPattern(pattern));
-        }
-        if (value instanceof LocalDateTime && args.size() > 1) {
-            String pattern = asString(args.get(1));
-            return ((LocalDateTime) value).format(DateTimeFormatter.ofPattern(pattern));
-        }
-        if (value instanceof java.util.Date && args.size() > 1) {
-            String pattern = asString(args.get(1));
-            LocalDateTime ldt = ((java.util.Date) value).toInstant()
-                    .atZone(java.time.ZoneId.systemDefault())
-                    .toLocalDateTime();
-            return ldt.format(DateTimeFormatter.ofPattern(pattern));
+        idCard = idCard.trim();
+        String birthStr;
+
+        if (idCard.length() == 15) {
+            birthStr = "19" + idCard.substring(6, 12);
+        } else if (idCard.length() == 18) {
+            birthStr = idCard.substring(6, 14);
+        } else {
+            throw new IllegalArgumentException("身份证号长度错误");
         }
 
-        return value.toString();
+        LocalDate birthday = LocalDate.parse(birthStr, DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        if (args.size() > 1) {
+            String pattern = asString(args.get(1));
+            return birthday.format(DateTimeFormatter.ofPattern(pattern));
+        }
+        return birthday;
     }
 }

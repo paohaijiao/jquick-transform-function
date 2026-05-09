@@ -13,8 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.string;
-
+package com.github.paohaijiao.function.convert;
 import com.github.paohaijiao.function.domain.JQuickBaseMethodInvoker;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
@@ -24,10 +23,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickToStringInvoker extends JQuickBaseMethodInvoker {
+public class JQuickToDateTimeInvoker extends JQuickBaseMethodInvoker {
 
-    public JQuickToStringInvoker() {
-        super("toString", "转换为字符串 - 用法: toString(value, pattern?)");
+    public JQuickToDateTimeInvoker() {
+        super("toDateTime", "转换为日期时间(LocalDateTime) - 用法: toDateTime(value, pattern?)");
     }
 
     @Override
@@ -37,23 +36,25 @@ public class JQuickToStringInvoker extends JQuickBaseMethodInvoker {
 
         if (value == null) return null;
 
-        // 日期类型特殊处理
-        if (value instanceof LocalDate && args.size() > 1) {
-            String pattern = asString(args.get(1));
-            return ((LocalDate) value).format(DateTimeFormatter.ofPattern(pattern));
-        }
-        if (value instanceof LocalDateTime && args.size() > 1) {
-            String pattern = asString(args.get(1));
-            return ((LocalDateTime) value).format(DateTimeFormatter.ofPattern(pattern));
-        }
-        if (value instanceof java.util.Date && args.size() > 1) {
-            String pattern = asString(args.get(1));
-            LocalDateTime ldt = ((java.util.Date) value).toInstant()
+        if (value instanceof LocalDateTime) return value;
+        if (value instanceof LocalDate) return ((LocalDate) value).atStartOfDay();
+        if (value instanceof java.util.Date) {
+            return ((java.util.Date) value).toInstant()
                     .atZone(java.time.ZoneId.systemDefault())
                     .toLocalDateTime();
-            return ldt.format(DateTimeFormatter.ofPattern(pattern));
         }
 
-        return value.toString();
+        String str = value.toString();
+        if (args.size() > 1) {
+            String pattern = asString(args.get(1));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            return LocalDateTime.parse(str, formatter);
+        }
+
+        try {
+            return LocalDateTime.parse(str);
+        } catch (Exception e) {
+            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        }
     }
 }
