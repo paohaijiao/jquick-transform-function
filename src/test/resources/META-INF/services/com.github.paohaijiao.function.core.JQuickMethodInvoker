@@ -1,0 +1,29 @@
+# 字符串方法
+com.github.paohaijiao.function.string.JQuickToUpperInvoker
+com.github.paohaijiao.function.string.JQuickToLowerInvoker
+com.github.paohaijiao.function.string.JQuickLengthInvoker
+com.github.paohaijiao.function.string.JQuickTrimInvoker
+com.github.paohaijiao.function.string.JQuickSubstringInvoker
+com.github.paohaijiao.function.string.JQuickContainsInvoker
+com.github.paohaijiao.function.string.JQuickReplaceInvoker
+com.github.paohaijiao.function.string.JQuickSplitInvoker
+com.github.paohaijiao.function.string.JQuickConcatInvoker
+
+# 数值方法
+com.github.paohaijiao.function.math.JQuickAddInvoker
+com.github.paohaijiao.function.math.JQuickSubtractInvoker
+com.github.paohaijiao.function.math.JQuickMultiplyInvoker
+com.github.paohaijiao.function.math.JQuickDivideInvoker
+com.github.paohaijiao.function.math.JQuickCeilInvoker
+com.github.paohaijiao.function.math.JQuickFloorInvoker
+com.github.paohaijiao.function.math.JQuickRoundInvoker
+com.github.paohaijiao.function.math.JQuickMaxInvoker
+com.github.paohaijiao.function.math.JQuickMinInvoker
+com.github.paohaijiao.function.math.JQuickAvgInvoker
+com.github.paohaijiao.function.math.JQuickAbsInvoker
+
+# 日期方法
+com.github.paohaijiao.function.date.JQuickFormatDateInvoker
+com.github.paohaijiao.function.date.JQuickTodayInvoker
+com.github.paohaijiao.function.date.JQuickTimestampInvoker
+com.github.paohaijiao.function.date.JQuickFormatDateInvoker
