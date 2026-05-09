@@ -58,17 +58,14 @@ public abstract class JQuickBaseFunctionFunctionProvider implements JQuickMethod
     protected void validateArgCount(List<Object> args, int expected) {
         if (args.size() != expected) {
             throw new IllegalArgumentException(
-                    String.format("Method '%s' expects %d argument(s), got %d",
-                            methodName, expected, args.size())
+                    String.format("Method '%s' expects %d argument(s), got %d", methodName, expected, args.size())
             );
         }
     }
 
     protected void validateArgCountRange(List<Object> args, int min, int max) {
         if (args.size() < min || args.size() > max) {
-            throw new IllegalArgumentException(
-                    String.format("Method '%s' expects %d-%d argument(s), got %d",
-                            methodName, min, max, args.size())
+            throw new IllegalArgumentException(String.format("Method '%s' expects %d-%d argument(s), got %d", methodName, min, max, args.size())
             );
         }
     }
