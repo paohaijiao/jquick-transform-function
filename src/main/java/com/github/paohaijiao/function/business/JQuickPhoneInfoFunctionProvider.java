@@ -45,9 +45,9 @@ public class JQuickPhoneInfoFunctionProvider extends JQuickBaseFunctionFunctionP
         if (phone == null) return null;
         phone = phone.trim().replaceAll("\\s", "");
 
-        if (!phone.matches("^1[3-9]\\d{9}$")) {
-            throw new IllegalArgumentException("手机号格式错误");
-        }
+//        if (!phone.matches("^1[3-9]\\d{9}$")) {
+//            throw new IllegalArgumentException("手机号格式错误");
+//        }
 
         Map<String, Object> info = extractInfo(phone);
 

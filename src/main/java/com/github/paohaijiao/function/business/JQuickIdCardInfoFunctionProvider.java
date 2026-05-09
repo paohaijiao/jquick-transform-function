@@ -55,7 +55,7 @@ public class JQuickIdCardInfoFunctionProvider extends JQuickBaseFunctionFunction
         }
         Map<String, Object> info = extractInfo(idCard);
         if (field != null) {
-            return info.get(field.toLowerCase());
+            return info.get(field);
         }
         return info;
     }
