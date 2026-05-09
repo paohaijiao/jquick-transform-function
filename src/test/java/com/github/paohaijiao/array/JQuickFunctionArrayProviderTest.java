@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -54,5 +55,25 @@ public class JQuickFunctionArrayProviderTest {
 
         boolean result4 = (boolean) manager.invoke("isArray", (Object)(null));
         assertFalse(result4);
+    }
+    @Test
+    public void testIsArray1() {
+        // 测试 List - 单个参数
+        List<String> list = Arrays.asList("a", "b");
+        boolean result1 = (boolean) manager.invoke("isArray", list);
+        assertTrue("List should be recognized as array", result1);
+
+        // 测试 Object[] - 使用 (Object) 强制转换，防止数组被展开
+        String[] array = new String[]{"a", "b"};
+        boolean result2 = (boolean) manager.invoke("isArray", (Object) array);
+        assertTrue("Object[] should be recognized as array", result2);
+
+        // 测试非数组
+        boolean result3 = (boolean) manager.invoke("isArray", "hello");
+        assertFalse("String should not be recognized as array", result3);
+
+        // 测试 null
+        boolean result4 = (boolean) manager.invoke("isArray", new Object[]{null});
+        assertFalse("null should not be recognized as array", result4);
     }
 }
