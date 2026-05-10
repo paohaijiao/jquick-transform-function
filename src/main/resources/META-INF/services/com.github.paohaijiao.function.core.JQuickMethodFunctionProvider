@@ -268,3 +268,20 @@ com.github.paohaijiao.function.string.JQuickWordCountFunctionProvider
 #转换函数
 com.github.paohaijiao.function.trans.JQuickTranslatorFunctionProvider
 
+#加解密
+com.github.paohaijiao.function.crypto.JQuickAesEncryptFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickAesEncryptFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickAesDecryptFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickAesGenerateKeyFunctionProvider
+
+com.github.paohaijiao.function.crypto.JQuickRsaEncryptFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickRsaDecryptFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickRsaGenerateKeyPairFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickRsaSignFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickRsaVerifyFunctionProvider
+
+com.github.paohaijiao.function.crypto.JQuickEccEncryptFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickEccDecryptFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickEccGenerateKeyPairFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickEccSignFunctionProvider
+com.github.paohaijiao.function.crypto.JQuickEccVerifyFunctionProvider
