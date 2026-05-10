@@ -29,8 +29,8 @@ public class JQuickSwitchFunctionProvider extends JQuickBaseFunctionFunctionProv
 
     @Override
     public Object invoke(List<Object> args) {
-        if (args.size() < 3 || args.size() % 2 == 0) {
-            throw new IllegalArgumentException("参数个数必须为奇数，至少3个参数");
+        if (args.size() < 4 || args.size() % 2 != 0) {
+            throw new IllegalArgumentException("参数个数必须为偶数，至少4个参数，格式: switch(value, case1, result1, case2, result2, ..., defaultValue)");
         }
         Object value = args.get(0);
         for (int i = 1; i < args.size() - 1; i += 2) {
