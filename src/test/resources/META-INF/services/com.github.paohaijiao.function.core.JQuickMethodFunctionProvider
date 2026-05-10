@@ -211,6 +211,7 @@ com.github.paohaijiao.function.string.JQuickCenterPadFunctionProvider
 com.github.paohaijiao.function.string.JQuickCompareToFunctionProvider
 com.github.paohaijiao.function.string.JQuickConcatFunctionProvider
 com.github.paohaijiao.function.string.JQuickContainsFunctionProvider
+com.github.paohaijiao.function.string.JQuickTokenizeFunctionProvider
 com.github.paohaijiao.function.string.JQuickCountCharFunctionProvider
 com.github.paohaijiao.function.string.JQuickCountMatchesFunctionProvider
 com.github.paohaijiao.function.string.JQuickDecodeUrlFunctionProvider

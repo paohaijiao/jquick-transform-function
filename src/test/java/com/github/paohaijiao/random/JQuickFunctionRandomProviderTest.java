@@ -380,7 +380,6 @@ public class JQuickFunctionRandomProviderTest {
         assertTrue(uuid.contains("-"));
     }
 
-    // ==================== 参数校验测试 ====================
 
     @Test(expected = IllegalArgumentException.class)
     public void testRandomIntArrayWithNoArgs() {
@@ -402,7 +401,6 @@ public class JQuickFunctionRandomProviderTest {
         manager.invoke("shuffle", Arrays.asList());
     }
 
-    // ==================== 综合场景测试 ====================
 
     @Test
     public void testRandomDataGenerationScenario() {
