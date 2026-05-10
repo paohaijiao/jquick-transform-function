@@ -25,9 +25,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * RSA解密方法提供者
- */
+import com.github.paohaijiao.crypto.exception.CryptoException;
+import com.github.paohaijiao.crypto.impl.RsaCryptoService;
+import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
+import com.github.paohaijiao.spi.anno.Priority;
+import com.github.paohaijiao.spi.constants.PriorityConstants;
+
+import java.security.PrivateKey;
+import java.security.KeyFactory;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+
+import com.github.paohaijiao.crypto.exception.CryptoException;
+import com.github.paohaijiao.crypto.impl.RsaCryptoService;
+import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
+import com.github.paohaijiao.spi.anno.Priority;
+import com.github.paohaijiao.spi.constants.PriorityConstants;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Priority(PriorityConstants.SYSTEM_HIGH)
 public class JQuickRsaDecryptFunctionProvider extends JQuickBaseFunctionFunctionProvider {
 
@@ -48,6 +70,7 @@ public class JQuickRsaDecryptFunctionProvider extends JQuickBaseFunctionFunction
         try {
             RsaCryptoService service = serviceCache.computeIfAbsent(base64PrivateKey, k -> {
                 try {
+                    // 修复：公钥传null，私钥传base64字符串
                     return new RsaCryptoService(null, k);
                 } catch (CryptoException e) {
                     throw new RuntimeException("创建RSA服务失败", e);

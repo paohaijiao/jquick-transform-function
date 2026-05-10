@@ -29,12 +29,14 @@ import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
 
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-/**
- * ECC加密方法提供者
- */
+
 @Priority(PriorityConstants.SYSTEM_HIGH)
 public class JQuickEccEncryptFunctionProvider extends JQuickBaseFunctionFunctionProvider {
 
@@ -55,8 +57,9 @@ public class JQuickEccEncryptFunctionProvider extends JQuickBaseFunctionFunction
         try {
             EccCryptoService service = serviceCache.computeIfAbsent(base64PublicKey, k -> {
                 try {
-                    return new EccCryptoService(k, (String) null);
-                } catch (CryptoException e) {
+                    PublicKey publicKey = loadPublicKey(k);
+                    return new EccCryptoService(publicKey);
+                } catch (Exception e) {
                     throw new RuntimeException("创建ECC服务失败", e);
                 }
             });
@@ -64,5 +67,12 @@ public class JQuickEccEncryptFunctionProvider extends JQuickBaseFunctionFunction
         } catch (CryptoException e) {
             throw new RuntimeException("ECC加密失败: " + e.getMessage(), e);
         }
+    }
+
+    private PublicKey loadPublicKey(String base64PublicKey) throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("EC");
+        return keyFactory.generatePublic(spec);
     }
 }

@@ -33,9 +33,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * ECC解密方法提供者
- */
+import com.github.paohaijiao.crypto.exception.CryptoException;
+import com.github.paohaijiao.crypto.impl.EccCryptoService;
+import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
+import com.github.paohaijiao.spi.anno.Priority;
+import com.github.paohaijiao.spi.constants.PriorityConstants;
+
+import java.security.PrivateKey;
+import java.security.KeyFactory;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Priority(PriorityConstants.SYSTEM_HIGH)
 public class JQuickEccDecryptFunctionProvider extends JQuickBaseFunctionFunctionProvider {
 
@@ -56,8 +67,9 @@ public class JQuickEccDecryptFunctionProvider extends JQuickBaseFunctionFunction
         try {
             EccCryptoService service = serviceCache.computeIfAbsent(base64PrivateKey, k -> {
                 try {
-                    return new EccCryptoService((String) null, k);
-                } catch (CryptoException e) {
+                    PrivateKey privateKey = loadPrivateKey(k);
+                    return new EccCryptoService(privateKey);
+                } catch (Exception e) {
                     throw new RuntimeException("创建ECC服务失败", e);
                 }
             });
@@ -65,5 +77,12 @@ public class JQuickEccDecryptFunctionProvider extends JQuickBaseFunctionFunction
         } catch (CryptoException e) {
             throw new RuntimeException("ECC解密失败: " + e.getMessage(), e);
         }
+    }
+
+    private PrivateKey loadPrivateKey(String base64PrivateKey) throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(base64PrivateKey);
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("EC");
+        return keyFactory.generatePrivate(spec);
     }
 }
