@@ -34,19 +34,19 @@ public abstract class JQuickBaseFunctionFunctionProvider implements JQuickMethod
     protected int asInt(Object obj) {
         if (obj == null) return 0;
         if (obj instanceof Number) return ((Number) obj).intValue();
-        return Integer.parseInt(obj.toString());
+        return Integer.valueOf(obj.toString());
     }
 
     protected long asLong(Object obj) {
         if (obj == null) return 0L;
         if (obj instanceof Number) return ((Number) obj).longValue();
-        return Long.parseLong(obj.toString());
+        return Long.valueOf(obj.toString());
     }
 
     protected double asDouble(Object obj) {
         if (obj == null) return 0.0;
         if (obj instanceof Number) return ((Number) obj).doubleValue();
-        return Double.parseDouble(obj.toString());
+        return Double.valueOf(obj.toString());
     }
 
     protected boolean asBoolean(Object obj) {

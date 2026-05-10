@@ -39,9 +39,7 @@ public class JQuickCombinationFunctionProvider extends JQuickBaseFunctionFunctio
         validateArgCount(args, 2);
         int n = asInt(args.get(0));
         int k = asInt(args.get(1));
-
         if (k < 0 || k > n) return 0;
-
         long result = 1;
         k = Math.min(k, n - k);
         for (int i = 1; i <= k; i++) {

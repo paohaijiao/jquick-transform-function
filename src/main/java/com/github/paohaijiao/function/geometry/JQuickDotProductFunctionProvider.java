@@ -37,10 +37,8 @@ public class JQuickDotProductFunctionProvider extends JQuickBaseFunctionFunction
     @Override
     public Object invoke(List<Object> args) {
         validateArgCount(args, 2);
-
         double[] v1 = toVector(args.get(0));
         double[] v2 = toVector(args.get(1));
-
         if (v1.length != v2.length) {
             throw new IllegalArgumentException("向量维度必须相同");
         }
