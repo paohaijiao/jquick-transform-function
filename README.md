@@ -1,7 +1,7 @@
 #使用方法
 > 要在 META-INF/services 中注册这些 SPI 扩展方法，需要遵循 Java SPI 规范：在 META-INF/services 目录下创建与接口全类名一致的文件，并将所有实现类的全类名逐行写入。
 ## 步骤 1：确定 SPI 接口类
-从示例代码中可推断，所有 XXXFunctionProvider 都继承自 JQuickBaseFunctionFunctionProvider， 其中调用父类的构造方法指定方法名和方法描述，且 SPI 接口应为统一的函数提供者接口（假设接口全类名为 com.github.paohaijiao.spi.JQuickFunctionProvider，需替换为实际接口名）。
+类 XXXFunctionProvider 需继承自 JQuickBaseFunctionFunctionProvider， 其中调用父类的构造方法指定方法名和方法描述
 
 ```java
 package com.github.paohaijiao.function.bool;
