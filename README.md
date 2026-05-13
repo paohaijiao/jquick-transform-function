@@ -1,3 +1,49 @@
+#使用方法
+> 要在 META-INF/services 中注册这些 SPI 扩展方法，需要遵循 Java SPI 规范：在 META-INF/services 目录下创建与接口全类名一致的文件，并将所有实现类的全类名逐行写入。
+## 步骤 1：确定 SPI 接口类
+从示例代码中可推断，所有 XXXFunctionProvider 都继承自 JQuickBaseFunctionFunctionProvider， 其中调用父类的构造方法指定方法名和方法描述，且 SPI 接口应为统一的函数提供者接口（假设接口全类名为 com.github.paohaijiao.spi.JQuickFunctionProvider，需替换为实际接口名）。
+
+```java
+package com.github.paohaijiao.function.bool;
+
+/**
+ * packageName com.github.paohaijiao.function.bool
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/9
+ */
+import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
+import com.github.paohaijiao.spi.anno.Priority;
+import com.github.paohaijiao.spi.constants.PriorityConstants;
+import java.util.List;
+
+@Priority(PriorityConstants.SYSTEM_HIGH)
+public class JQuickIsBooleanFunctionProvider extends JQuickBaseFunctionFunctionProvider {
+
+    public JQuickIsBooleanFunctionProvider() {
+        super("isBoolean", "判断是否为布尔值 - 用法: isBoolean(value)");
+    }
+
+    @Override
+    public Object invoke(List<Object> args) {
+        validateArgCount(args, 1);
+        return args.get(0) instanceof Boolean;
+    }
+}
+```
+
+## 步骤 2：创建 SPI 配置文件
+在项目资源目录（resources）下创建：
+META-INF/services/com.github.paohaijiao.spi.JQuickFunctionProvider
+
+## 步骤 3：写入所有实现类全类名
+将所有扩展方法的全类名逐行写入上述文件，内容如下（去重 + 按分类整理）：
+
+# 数组方法
+com.github.paohaijiao.function.array.JQuickIsArrayFunctionProvider
+
+# 目前内置约2240个内置方法
 | 序号 | Method Name        | Description                                                                                    |
 | ---- | ------------------ | ---------------------------------------------------------------------------------------------- |
 | 1    | isArray            | 判断是否为数组或列表 - 用法: isArray(value)                                                      |
@@ -69,7 +115,7 @@
 | 67   | startOfYear        | 获取年份第一天 - 用法: startOfYear(date?)                                                         |
 | 68   | weekOfYear         | 获取年中第几周 - 用法: weekOfYear(date?)                                                          |
 | 69   | year               | 获取年份 - 用法: year(date?) 不传参数则获取当前年份                                                   |
-| 70   | yearsBetween        | 计算两个日期之间的年份差 - 用法: yearsBetween(date1, date2)                                        |
+| 70   | yearsBetween       | 计算两个日期之间的年份差 - 用法: yearsBetween(date1, date2)                                        |
 | 71   | areaCircle         | 计算圆面积 - 用法: areaCircle(radius)                                                           |
 | 72   | areaRectangle      | 计算矩形面积 - 用法: areaRectangle(length, width)                                                |
 | 73   | areaTriangle       | 计算三角形面积 - 用法: areaTriangle(base, height) 或 areaTriangle(a, b, c)海伦公式                 |
@@ -149,7 +195,7 @@
 | 147  | toHex              | 转十六进制字符串 - 用法: toHex(number)                                                             |
 | 148  | toInt              | 转换为整数 - 用法: toInt(value, defaultValue?)                                                  |
 | 149  | toLong             | 转换为长整数 - 用法: toLong(value, defaultValue?)                                                |
-| 150  | toNumberString      | 转换为数字字符串 - 用法: toNumberString(number, pattern?)                                          |
+| 150  | toNumberString     | 转换为数字字符串 - 用法: toNumberString(number, pattern?)                                          |
 | 151  | toOctal            | 转八进制字符串 - 用法: toOctal(number)                                                            |
 | 152  | toRadians          | 角度转弧度 - 用法: toRadians(degrees)                                                           |
 | 153  | ulp                | 获取浮点数的最后一位单位精度 - 用法: ulp(value)                                                      |
@@ -223,34 +269,21 @@
 | 221  | uniqueChars        | 保留唯一字符（按首次出现顺序）                                                                          |
 | 222  | wordCount          | 统计单词数量 - 用法: wordCount(str)                                                              |
 | 223  | translate          | 码值翻译 - 用法: translate(context, code, dictType, defaultValue?)                             |
-| 224  | aesEncrypt         | [Crypto] AES加密 - 用法: aesEncrypt(data) 或 aesEncrypt(data, base64Key)                          |
-| 225  | aesDecrypt         | [Crypto] AES解密 - 用法: aesDecrypt(encryptedData, base64Key)                                  |
-| 226  | aesGenerateKey     | [Crypto] AES生成密钥 - 用法: aesGenerateKey() 返回Base64编码的密钥                                    |
-| 227  | rsaEncrypt         | [Crypto] RSA加密 - 用法: rsaEncrypt(data, base64PublicKey)                                       |
-| 228  | rsaDecrypt         | [Crypto] RSA解密 - 用法: rsaDecrypt(encryptedData, base64PrivateKey)                           |
-| 229  | rsaGenerateKeyPair | [Crypto] RSA生成密钥对 - 用法: rsaGenerateKeyPair() 返回包含公钥和私钥的Map                               |
-| 230  | rsaSign            | [Crypto] RSA签名 - 用法: rsaSign(data, base64PrivateKey)                                       |
-| 231  | rsaVerify          | [Crypto] RSA验签 - 用法: rsaVerify(data, signature, base64PublicKey)                           |
-| 232  | eccEncrypt         | [Crypto] ECC加密 - 用法: eccEncrypt(data, base64PublicKey)                                       |
-| 233  | eccDecrypt         | [Crypto] ECC解密 - 用法: eccDecrypt(encryptedData, base64PrivateKey)                           |
-| 234  | eccGenerateKeyPair | [Crypto] ECC生成密钥对 - 用法: eccGenerateKeyPair() 返回包含公钥和私钥的Map                               |
-| 235  | eccSign            | [Crypto] ECC签名 - 用法: eccSign(data, base64PrivateKey)                                       |
-| 236  | eccVerify          | [Crypto] ECC验签 - 用法: eccVerify(data, signature, base64PublicKey)                           |
-| 237  | formatDate         | 格式化日期 - 用法: formatDate(date, pattern)                                                        |
-| 238  | now                | 获取当前日期时间                                                                                     |
-| 239  | parseDate          | 解析日期字符串 - 用法: parseDate(dateStr, pattern)                                                    |
-| 240  | timestamp          | 获取当前时间戳                                                                                      |
-| 241  | today              | 获取当前日期                                                                                       |
-| 242  | toIsoString        | 转ISO格式字符串 - 用法: toIsoString(date)                                                            |
-| 243  | complexAdd         | 复数加法 - 用法: complexAdd(r1, i1, r2, i2) 返回 [实部, 虚部]                                        |
-| 244  | complexMultiply    | 复数乘法 - 用法: complexMultiply(r1, i1, r2, i2) 返回 [实部, 虚部]                                   |
-| 245  | matrixAdd         | 矩阵加法 - 用法: matrixAdd(matrix1, matrix2)                                                       |
-| 246  | toJson             | 将对象转换为JSON字符串                                                                                |
-| 247  | randomColor        | 生成随机颜色 - 用法: randomColor(type?) type: 'hex', 'rgb', 'preset'                                 |
-| 248  | randomDate         | 生成随机日期 - 用法: randomDate(startDate, endDate, pattern?)                                        |
-| 249  | base64Decode       | Base64解码 - 用法: base64Decode(encodedStr)                                                      |
-| 250  | base64Encode       | Base64编码 - 用法: base64Encode(str)                                                             |
-| 251  | decodeUrl          | URL解码 - 用法: decodeUrl(str)                                                                   |
-| 252  | encodeUrl          | URL编码 - 用法: encodeUrl(str)                                                                   |
-| 253  | md5                | MD5加密 - 用法: md5(str)                                                                         |
-| 254  | isEmail            | 判断是否为有效的邮箱地址                                                                                 |
+| 224  | formatDate         | 格式化日期 - 用法: formatDate(date, pattern)                                                        |
+| 225  | now                | 获取当前日期时间                                                                                     |
+| 226  | parseDate          | 解析日期字符串 - 用法: parseDate(dateStr, pattern)                                                    |
+| 227  | timestamp          | 获取当前时间戳                                                                                      |
+| 228  | today              | 获取当前日期                                                                                       |
+| 229  | toIsoString        | 转ISO格式字符串 - 用法: toIsoString(date)                                                            |
+| 230  | complexAdd         | 复数加法 - 用法: complexAdd(r1, i1, r2, i2) 返回 [实部, 虚部]                                        |
+| 231  | complexMultiply    | 复数乘法 - 用法: complexMultiply(r1, i1, r2, i2) 返回 [实部, 虚部]                                   |
+| 232  | matrixAdd          | 矩阵加法 - 用法: matrixAdd(matrix1, matrix2)                                                       |
+| 233  | toJson             | 将对象转换为JSON字符串                                                                                |
+| 234  | randomColor        | 生成随机颜色 - 用法: randomColor(type?) type: 'hex', 'rgb', 'preset'                                 |
+| 235  | randomDate         | 生成随机日期 - 用法: randomDate(startDate, endDate, pattern?)                                        |
+| 236  | base64Decode       | Base64解码 - 用法: base64Decode(encodedStr)                                                      |
+| 237  | base64Encode       | Base64编码 - 用法: base64Encode(str)                                                             |
+| 238  | decodeUrl          | URL解码 - 用法: decodeUrl(str)                                                                   |
+| 239  | encodeUrl          | URL编码 - 用法: encodeUrl(str)                                                                   |
+| 240  | md5                | MD5加密 - 用法: md5(str)                                                                         |
+| 241  | isEmail            | 判断是否为有效的邮箱地址                                                                                 |
