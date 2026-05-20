@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.crypto;
+package com.github.paohaijiao.function.crypto.ecc;
 
 /**
  * packageName com.github.paohaijiao.function.crypto

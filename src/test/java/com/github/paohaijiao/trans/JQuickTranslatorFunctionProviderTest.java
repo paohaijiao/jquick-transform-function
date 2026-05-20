@@ -37,6 +37,7 @@ package com.github.paohaijiao.trans;
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
+
 import com.github.paohaijiao.function.manager.JQuickMethodInvocationManager;
 import com.github.paohaijiao.param.JContext;
 import org.junit.Before;
@@ -46,7 +47,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Translator 码值翻译函数提供者测试类

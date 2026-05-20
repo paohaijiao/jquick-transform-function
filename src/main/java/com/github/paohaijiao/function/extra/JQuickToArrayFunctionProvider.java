@@ -14,9 +14,11 @@
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 package com.github.paohaijiao.function.extra;
+
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
+
 import java.util.List;
 
 @Priority(PriorityConstants.SYSTEM_HIGH)

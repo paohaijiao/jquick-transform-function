@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.crypto;
+package com.github.paohaijiao.function.crypto.ecc;
 
 /**
  * packageName com.github.paohaijiao.function.crypto
@@ -31,7 +31,6 @@ import com.github.paohaijiao.spi.constants.PriorityConstants;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ECC生成密钥对方法提供者

@@ -26,6 +26,7 @@ package com.github.paohaijiao.function.string;
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;

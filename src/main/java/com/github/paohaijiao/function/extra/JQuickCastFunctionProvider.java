@@ -29,9 +29,11 @@ package com.github.paohaijiao.function.extra;
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
+
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

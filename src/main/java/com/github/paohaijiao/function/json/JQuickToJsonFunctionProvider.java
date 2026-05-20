@@ -15,10 +15,11 @@
  */
 package com.github.paohaijiao.function.json;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
 
 @Priority(PriorityConstants.SYSTEM_MEDIUM)
