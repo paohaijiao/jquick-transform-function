@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.crypto;
+package com.github.paohaijiao.function.crypto.rsa;
 
 /**
  * packageName com.github.paohaijiao.function.crypto
@@ -31,41 +31,28 @@ import com.github.paohaijiao.spi.constants.PriorityConstants;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * RSA验签方法提供者
+ * RSA生成密钥对方法提供者
  */
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickRsaVerifyFunctionProvider extends JQuickBaseFunctionFunctionProvider {
+public class JQuickRsaGenerateKeyPairFunctionProvider extends JQuickBaseFunctionFunctionProvider {
 
-    private static final Map<String, RsaCryptoService> serviceCache = new ConcurrentHashMap<>();
-
-    public JQuickRsaVerifyFunctionProvider() {
-        super("rsaVerify", "[Crypto] RSA验签 - 用法: rsaVerify(data, signature, base64PublicKey)");
+    public JQuickRsaGenerateKeyPairFunctionProvider() {
+        super("rsaGenerateKeyPair", "[Crypto] RSA生成密钥对 - 用法: rsaGenerateKeyPair() 返回包含公钥和私钥的Map");
     }
 
     @Override
     public Object invoke(List<Object> args) {
-        validateArgCount(args, 3);
-        String data = asString(args.get(0));
-        String signature = asString(args.get(1));
-        String base64PublicKey = asString(args.get(2));
-        if (data == null || signature == null || base64PublicKey == null) {
-            throw new IllegalArgumentException("数据、签名和公钥不能为null");
-        }
+        validateArgCount(args, 0);
         try {
-            RsaCryptoService service = serviceCache.computeIfAbsent(base64PublicKey, k -> {
-                try {
-                    return new RsaCryptoService(k, (String) null);
-                } catch (CryptoException e) {
-                    throw new RuntimeException("创建RSA服务失败", e);
-                }
-            });
-            return service.verify(data, signature);
+            RsaCryptoService service = new RsaCryptoService();
+            Map<String, String> keyPair = new java.util.HashMap<>();
+            keyPair.put("publicKey", service.getBase64PublicKey());
+            keyPair.put("privateKey", service.getBase64PrivateKey());
+            return keyPair;
         } catch (CryptoException e) {
-            throw new RuntimeException("RSA验签失败: " + e.getMessage(), e);
+            throw new RuntimeException("生成RSA密钥对失败: " + e.getMessage(), e);
         }
     }
 }
-

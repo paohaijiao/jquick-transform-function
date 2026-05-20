@@ -13,8 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.crypto;
-
+package com.github.paohaijiao.function.crypto.aes;
 import com.github.paohaijiao.crypto.exception.CryptoException;
 import com.github.paohaijiao.crypto.impl.AesCryptoService;
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
@@ -26,36 +25,43 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * AES解密方法提供者
+ * AES加密方法提供者
  */
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickAesDecryptFunctionProvider extends JQuickBaseFunctionFunctionProvider {
+public class JQuickAesEncryptFunctionProvider extends JQuickBaseFunctionFunctionProvider {
 
     private static final Map<String, AesCryptoService> serviceCache = new ConcurrentHashMap<>();
 
-    public JQuickAesDecryptFunctionProvider() {
-        super("aesDecrypt", "[Crypto] AES解密 - 用法: aesDecrypt(encryptedData, base64Key)");
+    public JQuickAesEncryptFunctionProvider() {
+        super("aesEncrypt", "[Crypto] AES加密 - 用法: aesEncrypt(data) 或 aesEncrypt(data, base64Key)");
     }
 
     @Override
     public Object invoke(List<Object> args) {
-        validateArgCount(args, 2);
-        String encryptedData = asString(args.get(0));
-        String base64Key = asString(args.get(1));
-        if (encryptedData == null || base64Key == null) {
-            throw new IllegalArgumentException("加密数据和密钥不能为null");
+        validateArgCountRange(args, 1, 2);
+        String data = asString(args.get(0));
+        if (data == null) {
+            throw new IllegalArgumentException("待加密数据不能为null");
         }
         try {
-            AesCryptoService service = serviceCache.computeIfAbsent(base64Key, k -> {
-                try {
-                    return new AesCryptoService(k);
-                } catch (CryptoException e) {
-                    throw new RuntimeException("创建AES服务失败", e);
-                }
-            });
-            return service.decrypt(encryptedData);
+            AesCryptoService service;
+            if (args.size() == 2) {
+                String base64Key = asString(args.get(1));
+                service = serviceCache.computeIfAbsent(base64Key, k -> {
+                    try {
+                        return new AesCryptoService(k);
+                    } catch (CryptoException e) {
+                        throw new RuntimeException("创建AES服务失败", e);
+                    }
+                });
+            } else {
+                service = new AesCryptoService();
+                String newKey = service.getBase64Key();
+                System.err.println("[INFO] 生成新AES密钥: " + newKey);
+            }
+            return service.encrypt(data);
         } catch (CryptoException e) {
-            throw new RuntimeException("AES解密失败: " + e.getMessage(), e);
+            throw new RuntimeException("AES加密失败: " + e.getMessage(), e);
         }
     }
 }

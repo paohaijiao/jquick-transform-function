@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.crypto;
+package com.github.paohaijiao.function.crypto.aes;
 
 /**
  * packageName com.github.paohaijiao.function.crypto
@@ -24,35 +24,31 @@ package com.github.paohaijiao.function.crypto;
  */
 
 import com.github.paohaijiao.crypto.exception.CryptoException;
-import com.github.paohaijiao.crypto.impl.RsaCryptoService;
+import com.github.paohaijiao.crypto.impl.AesCryptoService;
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * RSA生成密钥对方法提供者
+ * AES生成密钥方法提供者
  */
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickRsaGenerateKeyPairFunctionProvider extends JQuickBaseFunctionFunctionProvider {
+public class JQuickAesGenerateKeyFunctionProvider extends JQuickBaseFunctionFunctionProvider {
 
-    public JQuickRsaGenerateKeyPairFunctionProvider() {
-        super("rsaGenerateKeyPair", "[Crypto] RSA生成密钥对 - 用法: rsaGenerateKeyPair() 返回包含公钥和私钥的Map");
+    public JQuickAesGenerateKeyFunctionProvider() {
+        super("aesGenerateKey", "[Crypto] AES生成密钥 - 用法: aesGenerateKey() 返回Base64编码的密钥");
     }
 
     @Override
     public Object invoke(List<Object> args) {
         validateArgCount(args, 0);
         try {
-            RsaCryptoService service = new RsaCryptoService();
-            Map<String, String> keyPair = new java.util.HashMap<>();
-            keyPair.put("publicKey", service.getBase64PublicKey());
-            keyPair.put("privateKey", service.getBase64PrivateKey());
-            return keyPair;
+            AesCryptoService service = new AesCryptoService();
+            return service.getBase64Key();
         } catch (CryptoException e) {
-            throw new RuntimeException("生成RSA密钥对失败: " + e.getMessage(), e);
+            throw new RuntimeException("生成AES密钥失败: " + e.getMessage(), e);
         }
     }
 }

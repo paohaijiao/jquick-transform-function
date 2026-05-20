@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.function.crypto;
+package com.github.paohaijiao.function.crypto.rsa;
 
 /**
  * packageName com.github.paohaijiao.function.crypto
@@ -33,37 +33,46 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import java.security.PublicKey;
+import java.security.KeyFactory;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+
 /**
- * RSA签名方法提供者
+ * RSA加密方法提供者 - 修复版
  */
 @Priority(PriorityConstants.SYSTEM_HIGH)
-public class JQuickRsaSignFunctionProvider extends JQuickBaseFunctionFunctionProvider {
+public class JQuickRsaEncryptFunctionProvider extends JQuickBaseFunctionFunctionProvider {
 
     private static final Map<String, RsaCryptoService> serviceCache = new ConcurrentHashMap<>();
 
-    public JQuickRsaSignFunctionProvider() {
-        super("rsaSign", "[Crypto] RSA签名 - 用法: rsaSign(data, base64PrivateKey)");
+    public JQuickRsaEncryptFunctionProvider() {
+        super("rsaEncrypt", "[Crypto] RSA加密 - 用法: rsaEncrypt(data, base64PublicKey)");
     }
 
     @Override
     public Object invoke(List<Object> args) {
         validateArgCount(args, 2);
         String data = asString(args.get(0));
-        String base64PrivateKey = asString(args.get(1));
-        if (data == null || base64PrivateKey == null) {
-            throw new IllegalArgumentException("数据和私钥不能为null");
+        String publicKey = asString(args.get(1));
+        if (publicKey == null || data == null) {
+            throw new IllegalArgumentException("加密数据和公钥不能为null");
         }
         try {
-            RsaCryptoService service = serviceCache.computeIfAbsent(base64PrivateKey, k -> {
-                try {
-                    return new RsaCryptoService(null, k);
-                } catch (CryptoException e) {
-                    throw new RuntimeException("创建RSA服务失败", e);
-                }
-            });
-            return service.sign(data);
-        } catch (CryptoException e) {
-            throw new RuntimeException("RSA签名失败: " + e.getMessage(), e);
+            RsaCryptoService service = new RsaCryptoService(loadPublicKey(publicKey));
+            return service.encrypt(data);
+        } catch (Exception e) {
+            throw new RuntimeException("RSA加密失败: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * 从Base64字符串加载公钥
+     */
+    private PublicKey loadPublicKey(String base64PublicKey) throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return keyFactory.generatePublic(spec);
     }
 }

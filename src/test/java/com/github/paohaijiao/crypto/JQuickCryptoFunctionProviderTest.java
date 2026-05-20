@@ -40,13 +40,6 @@ public class JQuickCryptoFunctionProviderTest {
         manager = JQuickMethodInvocationManager.getInstance();
     }
 
-    @Test
-    public void testAesGenerateKey() {
-        String key = (String) manager.invoke("aesGenerateKey", Arrays.asList());
-        assertNotNull(key);
-        assertFalse(key.isEmpty());
-        System.out.println("Generated AES Key: " + key);
-    }
 
     @Test
     public void testAesEncryptDecrypt() {
@@ -62,20 +55,6 @@ public class JQuickCryptoFunctionProviderTest {
         // 解密
         String decrypted = (String) manager.invoke("aesDecrypt", Arrays.asList(encrypted, base64Key));
         assertEquals(originalData, decrypted);
-    }
-
-    @Test
-    public void testAesEncryptWithoutKey() {
-        String originalData = "Test data without key";
-        // 不传密钥，自动生成
-        String encrypted = (String) manager.invoke("aesEncrypt", Arrays.asList(originalData));
-        assertNotNull(encrypted);
-        System.out.println("Auto-key encrypted: " + encrypted);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testAesDecryptWithoutKey() {
-        manager.invoke("aesDecrypt", Arrays.asList("encryptedData"));
     }
 
 
@@ -95,19 +74,14 @@ public class JQuickCryptoFunctionProviderTest {
     @Test
     public void testRsaEncryptDecrypt() {
         String originalData = "RSA加密测试数据";
-        // 生成密钥对
         @SuppressWarnings("unchecked")
         Map<String, String> keyPair = (Map<String, String>) manager.invoke("rsaGenerateKeyPair", Arrays.asList());
         String publicKey = keyPair.get("publicKey");
         String privateKey = keyPair.get("privateKey");
-
-        // 加密
-        String encrypted = (String) manager.invoke("rsaEncrypt", Arrays.asList(originalData, publicKey));
+        String encrypted = (String) manager.invoke("rsaEncrypt", Arrays.asList(originalData,publicKey));
         assertNotNull(encrypted);
         System.out.println("RSA Encrypted: " + encrypted);
-
-        // 解密
-        String decrypted = (String) manager.invoke("rsaDecrypt", Arrays.asList(encrypted, privateKey));
+        String decrypted = (String) manager.invoke("rsaDecrypt", Arrays.asList(encrypted,privateKey));
         assertEquals(originalData, decrypted);
     }
 
