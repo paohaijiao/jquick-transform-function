@@ -22,11 +22,13 @@ package com.github.paohaijiao.function.collection;
  * @version 1.0.0
  * @since 2026/5/9
  */
+
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
-import java.util.List;
+
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Priority(PriorityConstants.SYSTEM_HIGH)

@@ -18,6 +18,7 @@ package com.github.paohaijiao.function.business;
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
+
 import java.util.List;
 
 @Priority(PriorityConstants.SYSTEM_HIGH)

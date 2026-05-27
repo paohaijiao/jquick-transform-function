@@ -26,6 +26,7 @@ package com.github.paohaijiao.function.extra;
 import com.github.paohaijiao.function.domain.JQuickBaseFunctionFunctionProvider;
 import com.github.paohaijiao.spi.anno.Priority;
 import com.github.paohaijiao.spi.constants.PriorityConstants;
+
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
 import java.util.List;
