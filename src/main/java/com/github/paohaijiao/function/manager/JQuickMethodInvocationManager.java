@@ -121,6 +121,135 @@ public class JQuickMethodInvocationManager {
     }
 
     /**
+     * 批量注册方法
+     */
+    public void registerInvokers(List<JQuickMethodFunctionProvider> invokers) {
+        if (invokers == null || invokers.isEmpty()) {
+            log.warn("No invokers to register");
+            return;
+        }
+        for (JQuickMethodFunctionProvider invoker : invokers) {
+            registerInvoker(invoker);
+        }
+        log.info("Batch registered " + invokers.size() + " methods");
+    }
+
+    /**
+     * 批量注册方法（可变参数）
+     */
+    public void registerInvokers(JQuickMethodFunctionProvider... invokers) {
+        if (invokers == null || invokers.length == 0) {
+            log.warn("No invokers to register");
+            return;
+        }
+        registerInvokers(Arrays.asList(invokers));
+    }
+
+    /**
+     * 覆盖注册方法（如果已存在则替换）
+     */
+    public void registerOrReplaceInvoker(JQuickMethodFunctionProvider invoker) {
+        String methodName = invoker.getMethodName();
+        if (invokerRegistry.containsKey(methodName)) {
+            unregisterInvoker(methodName);
+            log.debug("Replacing existing method: " + methodName);
+        }
+        invokerRegistry.put(methodName, invoker);
+        String group = extractGroup(invoker.getDescription());
+        List<JQuickMethodFunctionProvider> list = groupedInvokers.get(group);
+        if (list == null) {
+            list = new ArrayList<>();
+            groupedInvokers.put(group, list);
+        }
+        list.add(invoker);
+        log.info("Registered/Replaced method: " + methodName + " - " + invoker.getDescription());
+    }
+
+    /**
+     * 通过函数式接口注册方法
+     */
+    public void registerInvoker(String methodName, java.util.function.Function<List<Object>, Object> function) {
+        registerInvoker(methodName, function, methodName, 5000);
+    }
+
+    /**
+     * 通过函数式接口注册方法（带描述）
+     */
+    public void registerInvoker(String methodName, java.util.function.Function<List<Object>, Object> function, String description) {
+        registerInvoker(methodName, function, description, 5000);
+    }
+
+    /**
+     * 通过函数式接口注册方法（带描述和优先级）
+     */
+    public void registerInvoker(String methodName, java.util.function.Function<List<Object>, Object> function, String description, int priority) {
+        JQuickMethodFunctionProvider invoker = new JQuickMethodFunctionProvider() {
+            @Override
+            public String getMethodName() {
+                return methodName;
+            }
+
+            @Override
+            public Object invoke(List<Object> args) {
+                return function.apply(args);
+            }
+
+            @Override
+            public String getDescription() {
+                return description;
+            }
+
+            @Override
+            public int getPriority() {
+                return priority;
+            }
+        };
+        registerInvoker(invoker);
+    }
+
+    /**
+     * 通过函数式接口注册方法（覆盖模式）
+     */
+    public void registerOrReplaceInvoker(String methodName, java.util.function.Function<List<Object>, Object> function) {
+        registerOrReplaceInvoker(methodName, function, methodName, 5000);
+    }
+
+    /**
+     * 通过函数式接口注册方法（覆盖模式，带描述）
+     */
+    public void registerOrReplaceInvoker(String methodName, java.util.function.Function<List<Object>, Object> function, String description) {
+        registerOrReplaceInvoker(methodName, function, description, 5000);
+    }
+
+    /**
+     * 通过函数式接口注册方法（覆盖模式，带描述和优先级）
+     */
+    public void registerOrReplaceInvoker(String methodName, java.util.function.Function<List<Object>, Object> function, String description, int priority) {
+        JQuickMethodFunctionProvider invoker = new JQuickMethodFunctionProvider() {
+            @Override
+            public String getMethodName() {
+                return methodName;
+            }
+
+            @Override
+            public Object invoke(List<Object> args) {
+                return function.apply(args);
+            }
+
+            @Override
+            public String getDescription() {
+                return description;
+            }
+
+            @Override
+            public int getPriority() {
+                return priority;
+            }
+        };
+        registerOrReplaceInvoker(invoker);
+    }
+
+    /**
      * 注销方法
      */
     public void unregisterInvoker(String methodName) {
