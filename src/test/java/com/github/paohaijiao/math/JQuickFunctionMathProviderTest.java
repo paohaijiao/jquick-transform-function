@@ -935,4 +935,31 @@ public class JQuickFunctionMathProviderTest {
         assertEquals(Math.PI / 2, radians, DELTA);
         assertEquals(1.0, sinValue, DELTA);
     }
+    @Test
+    public void testCountDistinct() {
+        Integer distinctCount = (Integer) manager.invoke("countDistinct", 1, 2, 2, 3, 3, 3); // 3
+        System.out.println(distinctCount);
+    }
+    @Test
+    public void testCount() {
+        Integer distinctCount = (Integer) manager.invoke("count", 1, 2, 2, 3, 3, 3); // 6
+        System.out.println(distinctCount);
+    }
+    @Test
+    public void testcountNonNull() {
+        Integer distinctCount = (Integer) manager.invoke("countNonNull", 1, 2, null, 3, 3, 3); // 5
+        System.out.println(distinctCount);
+    }
+    @Test
+    public void testProduct() {
+        double distinctCount = (double) manager.invoke("product", 1, 2, null, 3, 3, 3); // 54.0
+        System.out.println(distinctCount);
+    }
+    @Test
+    public void testSumt() {
+        double distinctCount = (double) manager.invoke("sum", 1, 2, null, 3, 3, 3); // 12
+        System.out.println(distinctCount);
+    }
+
+
 }

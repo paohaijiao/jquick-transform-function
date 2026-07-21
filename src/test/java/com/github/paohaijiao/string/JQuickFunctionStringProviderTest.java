@@ -1047,5 +1047,15 @@ public class JQuickFunctionStringProviderTest {
         double result = (double) manager.invoke("lerp", Arrays.asList(10.0, 20.0, 0.5));
         assertEquals(15.0, result, 0.001);
     }
+    @Test
+    public void testGroupConcat() {
+        String result = (String) manager.invoke("groupConcat", Arrays.asList( "->","a", "b", "c"));//a->b->c
+        System.out.println(result);
+    }
+    @Test
+    public void teststringAgg() {
+        String result = (String) manager.invoke("stringAgg", Arrays.asList( "->","a", "b", "c"));//a->b->c
+        System.out.println(result);
+    }
 
 }

@@ -130,6 +130,11 @@ com.github.paohaijiao.function.extra.JQuickTypeOfFunctionProvider
 com.github.paohaijiao.function.json.JQuickToJsonFunctionProvider
 
 #数学方法
+com.github.paohaijiao.function.math.JQuickCountDistinctFunctionProvider
+com.github.paohaijiao.function.math.JQuickCountFunctionProvider
+com.github.paohaijiao.function.math.JQuickCountNonNullFunctionProvider
+com.github.paohaijiao.function.math.JQuickProductFunctionProvider
+com.github.paohaijiao.function.math.JQuickSumFunctionProvider
 com.github.paohaijiao.function.math.JQuickAbsFunctionProvider
 com.github.paohaijiao.function.math.JQuickAcosFunctionProvider
 com.github.paohaijiao.function.math.JQuickAddFunctionProvider
@@ -204,6 +209,8 @@ com.github.paohaijiao.function.random.JQuickRandomUUIDFunctionProvider
 
 #字符串方法
 com.github.paohaijiao.function.string.JQuickAbbreviateFunctionProvider
+com.github.paohaijiao.function.string.JQuickGroupConcatFunctionProvider
+com.github.paohaijiao.function.string.JQuickStringAggFunctionProvider
 com.github.paohaijiao.function.string.JQuickBase64DecodeFunctionProvider
 com.github.paohaijiao.function.string.JQuickBase64EncodeFunctionProvider
 com.github.paohaijiao.function.string.JQuickCapitalizeFunctionProvider
