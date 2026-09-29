@@ -14,10 +14,9 @@
   <a href="https://github.com/paohaijiao/jquick-transform-function/network/members"><img src="https://img.shields.io/github/forks/paohaijiao/jquick-transform-function.svg" alt="Forks" /></a>
 </p>
 
-> 📘 官方文档：<https://www.jquick.org/jquick-transform>
-
-> 📦 Maven Central：<https://central.sonatype.com/artifact/io.github.paohaijiao/jquick-transform-function>
-> 🐛 Issue Tracker：<https://github.com/paohaijiao/jquick-transform-function/issues>
+> 📘 官方文档：[www.jquick.org](https://www.jquick.org/jquick-transform)
+> <br>📦 Maven Central：[central.sonatype.com](https://central.sonatype.com/artifact/io.github.paohaijiao/jquick-transform-function)
+> <br>🐛 Issue Tracker：[github.com/paohaijiao](https://github.com/paohaijiao/jquick-transform-function/issues)
 
 <p align="center">
   <a href="./README.md">English</a> | 简体中文
