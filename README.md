@@ -15,8 +15,8 @@
 </p>
 
 > 📘 官方文档：<https://www.jquick.org/jquick-transform>
-> 📦 Maven Central：<https://central.sonatype.com/artifact/io.github.paohaijiao/jquick-transform-function>
-> 🐛 Issue Tracker：<https://github.com/paohaijiao/jquick-transform-function/issues>
+> <br>📦 Maven Central：<https://central.sonatype.com/artifact/io.github.paohaijiao/jquick-transform-function>
+> <br>🐛 Issue Tracker：<https://github.com/paohaijiao/jquick-transform-function/issues>
 
 
 <p align="center">
