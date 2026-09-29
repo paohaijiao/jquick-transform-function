@@ -50,7 +50,7 @@
 <dependency>
     <groupId>io.github.paohaijiao</groupId>
     <artifactId>jquick-transform-function</artifactId>
-    <version>1.4.0</version>
+    <version>${latest.version}</version>
 </dependency>
 ```
 
